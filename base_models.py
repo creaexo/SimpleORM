@@ -49,7 +49,6 @@ class OrmModel(BaseOps):
                 for index, field in enumerate(fields):
                     if 'PRIMARY KEY' in field:
                         pk_exists = True
-                        print(f'{pk_exists=}')
                     if '.foreign_key.' in field:
                         fk_fields = field.split('.foreign_key.')
                         fields[index] = fk_fields[0]
@@ -59,7 +58,6 @@ class OrmModel(BaseOps):
                         fields.append(f'FOREIGN KEY ({first_fk}) REFERENCES {table_fk_name}({second_fk})')
                 if pk_exists is False:
                     fields.insert(0, 'pk INTEGER PRIMARY KEY')
-                print(fields)
                 with sqlite3.connect(cls.db_name) as db_connect:
                     cursor = db_connect.cursor()
                     cursor.execute(f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(fields)})")
@@ -180,7 +178,6 @@ class OrmInteger(BaseOps):
                 resource += ' PRIMARY KEY'
             if self.foreign_key_field is not None:
                 resource += f'.foreign_key.{self.foreign_key_field.lower()}'
-                # print()
             return resource
         else:
             raise ErrorNotCorrectDB(
